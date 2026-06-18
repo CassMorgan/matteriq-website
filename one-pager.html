@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MatterIQ — How It Works</title>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --gold: #c9a84c;
+      --white: #ffffff;
+      --off-white: #f7f8fa;
+      --gray: #6b7280;
+      --gray-light: #e5e7eb;
+      --text: #111827;
+      --green: #059669;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: white;
+      color: var(--text);
+      font-size: 14px;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 24px;
+      border-bottom: 3px solid var(--navy);
+      margin-bottom: 36px;
+    }
+    .logo { font-size: 26px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+    .logo span { color: var(--gold); }
+    .tagline { font-size: 12px; color: var(--gray); margin-top: 3px; }
+    .header-right { text-align: right; font-size: 12px; color: var(--gray); line-height: 1.7; }
+
+    /* Intro */
+    .intro { margin-bottom: 40px; }
+    .intro h1 { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.5px; }
+    .intro p { font-size: 15px; color: var(--gray); line-height: 1.7; max-width: 640px; }
+
+    /* Two col */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 36px; }
+
+    /* Problem box */
+    .problem-box { background: var(--off-white); border-radius: 10px; padding: 24px; }
+    .problem-box h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--navy); margin-bottom: 14px; }
+    .problem-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; }
+    .problem-item .dot { width: 8px; height: 8px; background: #dc2626; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+    /* What you get */
+    .solution-box { background: var(--navy); border-radius: 10px; padding: 24px; color: white; }
+    .solution-box h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 14px; }
+    .solution-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.85); }
+    .solution-item .check { color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    /* Phases */
+    h2.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--navy); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-light); }
+    .phases { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+    .phase { border-radius: 8px; padding: 18px; border: 1px solid var(--gray-light); }
+    .phase.active { background: var(--navy); border-color: var(--navy); }
+    .phase-num { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 6px; }
+    .phase h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--navy); }
+    .phase.active h3 { color: white; }
+    .phase ul { list-style: none; }
+    .phase ul li { font-size: 12px; color: var(--gray); padding: 3px 0 3px 14px; position: relative; }
+    .phase.active ul li { color: rgba(255,255,255,0.75); }
+    .phase ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 700; font-size: 10px; top: 4px; }
+    .live-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+
+    /* Pricing */
+    .pricing-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+    .price-box { border-radius: 8px; padding: 18px; border: 1px solid var(--gray-light); text-align: center; }
+    .price-box.featured { border-color: var(--navy); background: var(--off-white); }
+    .price-box .tier { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 4px; }
+    .price-box .name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .price-box .amount { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -1px; }
+    .price-box .amount span { font-size: 13px; font-weight: 500; color: var(--gray); }
+    .price-box .includes { font-size: 11px; color: var(--gray); margin-top: 8px; line-height: 1.5; }
+    .popular { font-size: 10px; font-weight: 700; text-transform: uppercase; background: var(--gold); color: var(--navy); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 6px; }
+
+    /* Timeline */
+    .timeline { margin-bottom: 36px; }
+    .tl-item { display: flex; gap: 16px; margin-bottom: 12px; align-items: flex-start; }
+    .tl-day { background: var(--navy); color: white; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .tl-day.gold { background: var(--gold); color: var(--navy); }
+    .tl-content { font-size: 13px; line-height: 1.5; }
+    .tl-content strong { display: block; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .tl-content span { color: var(--gray); }
+
+    /* Comparison */
+    .comp { width: 100%; border-collapse: collapse; margin-bottom: 36px; font-size: 12px; }
+    .comp th { background: var(--navy); color: white; padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .comp th.you { background: var(--gold); color: var(--navy); }
+    .comp td { padding: 8px 12px; border-bottom: 1px solid var(--gray-light); }
+    .comp tr:last-child td { border-bottom: none; }
+    .comp td.you { background: #fffbeb; font-weight: 700; }
+    .win { color: var(--green); font-weight: 700; }
+    .lose { color: var(--gray); }
+
+    /* Footer */
+    .footer { border-top: 2px solid var(--navy); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .footer .contact { font-size: 13px; line-height: 1.7; }
+    .footer .contact strong { color: var(--navy); font-size: 15px; }
+    .footer .guarantee { background: var(--off-white); border-radius: 8px; padding: 12px 18px; font-size: 12px; color: var(--gray); text-align: center; }
+    .footer .guarantee strong { color: var(--green); display: block; font-size: 14px; }
+
+    @media print {
+      body { padding: 20px; }
+      .phases, .pricing-row, .two-col { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">MATTER<span>IQ</span></div>
+    <div class="tagline">Law Firm Operations & AI — Clarkston, MI</div>
+  </div>
+  <div class="header-right">
+    Prepared for: <strong>[Firm Name]</strong><br>
+    <span id="doc-date"></span><br>
+    cass@matteriq.io
+  </div>
+</div>
+
+<div class="intro">
+  <h1>Your firm is losing money it doesn't know about.</h1>
+  <p>MatterIQ connects directly to your PC Law database and gives you real-time visibility into unbilled work, overdue balances, and collections — without replacing anything you already use. Most firms go live in 3 days.</p>
+</div>
+
+<div class="two-col">
+  <div class="problem-box">
+    <h2>What's costing you money today</h2>
+    <div class="problem-item"><div class="dot"></div><div>Attorneys log time late or forget it entirely — hours vanish before invoices go out</div></div>
+    <div class="problem-item"><div class="dot"></div><div>Invoices sit unpaid for 60, 90, 120+ days with no consistent follow-up</div></div>
+    <div class="problem-item"><div class="dot"></div><div>PC Law has the data but the reports are clunky — nobody looks at them</div></div>
+    <div class="problem-item"><div class="dot"></div><div>Admin tasks pile up because nobody has a spare hour</div></div>
+  </div>
+  <div class="solution-box">
+    <h2>What MatterIQ does</h2>
+    <div class="solution-item"><span class="check">✓</span><div>Live AR dashboard — see every overdue matter at a glance</div></div>
+    <div class="solution-item"><span class="check">✓</span><div>One-click collections letters, pre-populated with client data</div></div>
+    <div class="solution-item"><span class="check">✓</span><div>Billing leakage alerts — flags unbilled work before it's lost</div></div>
+    <div class="solution-item"><span class="check">✓</span><div>Email monitoring with AI draft replies for attorney review</div></div>
+    <div class="solution-item"><span class="check">✓</span><div>Connects to PC Law — no migration, no disruption</div></div>
+  </div>
+</div>
+
+<h2 class="section-title">Three Phases — Rolled Out Over 90 Days</h2>
+<div class="phases">
+  <div class="phase active">
+    <div class="phase-num">Month 1 <span class="live-badge">Live Day 1</span></div>
+    <h3>AR Tracker</h3>
+    <ul>
+      <li>AR aging dashboard</li>
+      <li>Overdue matter alerts</li>
+      <li>Collections letter generator</li>
+      <li>Collections priority list</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-num">Month 2</div>
+    <h3>Billing Assistant</h3>
+    <ul>
+      <li>Unbilled work detector</li>
+      <li>WIP gap reports</li>
+      <li>Time entry reminders</li>
+      <li>Revenue leakage alerts</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-num">Month 3</div>
+    <h3>Email & Admin AI</h3>
+    <ul>
+      <li>Inbox monitoring</li>
+      <li>AI draft replies</li>
+      <li>Payment follow-ups</li>
+      <li>Court notice flagging</li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section-title">Pricing — Flat Monthly, No Annual Contracts</h2>
+<div class="pricing-row">
+  <div class="price-box">
+    <div class="tier">Starter</div>
+    <div class="name">AR Essentials</div>
+    <div class="amount">$299<span>/mo</span></div>
+    <div class="includes">AR dashboard, collections letters, overdue alerts</div>
+  </div>
+  <div class="price-box featured">
+    <div class="popular">Most Popular</div>
+    <div class="tier">Growth</div>
+    <div class="name">Full Operations</div>
+    <div class="amount">$499<span>/mo</span></div>
+    <div class="includes">Everything + billing leakage detector + advanced reporting</div>
+  </div>
+  <div class="price-box">
+    <div class="tier">Done-for-You</div>
+    <div class="name">Fully Managed</div>
+    <div class="amount">$799<span>/mo</span></div>
+    <div class="includes">Everything + email AI + custom config + priority support</div>
+  </div>
+</div>
+
+<h2 class="section-title">What Happens After You Say Yes</h2>
+<div class="timeline">
+  <div class="tl-item">
+    <div class="tl-day">Day 1</div>
+    <div class="tl-content"><strong>30-min discovery call</strong><span>We ask 8 questions about your setup. You hang up and we get to work.</span></div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-day">Day 2</div>
+    <div class="tl-content"><strong>We build your dashboard</strong><span>Configured for your specific PC Law setup. Branded with your firm's name and logo.</span></div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-day">Day 3</div>
+    <div class="tl-content"><strong>90-minute launch session</strong><span>We connect live to your database. Your real data appears on screen. Staff are trained. You're live.</span></div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-day gold">Day 3+</div>
+    <div class="tl-content"><strong>You're running</strong><span>Open a browser any time to see your AR, overdue matters, and unbilled work. We handle everything else.</span></div>
+  </div>
+</div>
+
+<h2 class="section-title">How We Compare</h2>
+<table class="comp">
+  <thead>
+    <tr>
+      <th></th>
+      <th class="you">MatterIQ</th>
+      <th>Filevine</th>
+      <th>Clio</th>
+      <th>Smokeball</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Monthly cost</td>
+      <td class="you win">$299–$799</td>
+      <td class="lose">$500–$2,000+</td>
+      <td class="lose">$49–$149/user</td>
+      <td class="lose">$99–$199/user</td>
+    </tr>
+    <tr>
+      <td>Requires PC Law migration</td>
+      <td class="you win">Never</td>
+      <td class="lose">Yes</td>
+      <td class="lose">Yes</td>
+      <td class="lose">Yes</td>
+    </tr>
+    <tr>
+      <td>Time to go live</td>
+      <td class="you win">3 days</td>
+      <td class="lose">Weeks–months</td>
+      <td class="lose">Weeks–months</td>
+      <td class="lose">Weeks</td>
+    </tr>
+    <tr>
+      <td>Annual contract</td>
+      <td class="you win">No</td>
+      <td class="lose">Yes</td>
+      <td class="lose">Yes</td>
+      <td class="lose">Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footer">
+  <div class="contact">
+    <strong>Cass Morgan — MatterIQ</strong>
+    cass@matteriq.io<br>
+    Clarkston, MI &nbsp;·&nbsp; matteriq.io<br>
+    <em style="font-size:12px; color:var(--gray);">10 years Oakland County Courthouse · UWM Technical Delivery Manager</em>
+  </div>
+  <div class="guarantee">
+    <strong>30-Day Money-Back Guarantee</strong>
+    Cancel anytime. No data held hostage.<br>No annual contracts. Ever.
+  </div>
+</div>
+
+<script>
+  document.getElementById('doc-date').textContent = new Date().toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+</script>
+</body>
+</html>

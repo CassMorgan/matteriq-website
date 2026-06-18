@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Technical Requirements — Firm Intelligence Platform</title>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --gold: #c9a84c;
+      --white: #ffffff;
+      --off-white: #f7f8fa;
+      --gray: #6b7280;
+      --gray-light: #e5e7eb;
+      --text: #111827;
+      --green: #059669;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      font-size: 14px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+    /* Header */
+    .doc-header {
+      border-bottom: 3px solid var(--navy);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .logo-mark {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+    }
+    .logo-mark span { color: var(--gold); }
+    .doc-meta {
+      text-align: right;
+      font-size: 12px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .doc-subtitle {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+
+    /* Sections */
+    h2 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--navy);
+      margin: 28px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    p { line-height: 1.6; margin-bottom: 12px; color: var(--text); }
+
+    /* Requirements table */
+    .req-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .req-table th {
+      background: var(--navy);
+      color: white;
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .req-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-light);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .req-table tr:last-child td { border-bottom: none; }
+    .req-table tr:nth-child(even) td { background: var(--off-white); }
+    .req-table td:first-child { font-weight: 600; width: 30%; }
+    .req-table td.required { color: var(--navy); font-weight: 700; }
+    .req-table td.optional { color: var(--gray); }
+
+    /* Checklist */
+    .checklist { list-style: none; margin-bottom: 20px; }
+    .checklist li {
+      padding: 8px 12px 8px 36px;
+      position: relative;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 10px;
+      color: var(--navy);
+      font-size: 16px;
+    }
+    .checklist li strong { display: block; font-weight: 600; }
+    .checklist li span { color: var(--gray); font-size: 12px; }
+
+    /* Callout box */
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid var(--navy);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .callout strong { color: var(--navy); }
+
+    .callout.green {
+      background: #f0fdf4;
+      border-left-color: var(--green);
+    }
+    .callout.green strong { color: var(--green); }
+
+    /* Timeline */
+    .timeline { margin: 16px 0 24px; }
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+    .timeline-day {
+      background: var(--navy);
+      color: white;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .timeline-day.gold { background: var(--gold); color: var(--navy); }
+    .timeline-content { font-size: 13px; line-height: 1.5; }
+    .timeline-content strong { display: block; font-weight: 600; margin-bottom: 2px; }
+    .timeline-content span { color: var(--gray); }
+
+    /* Footer */
+    .doc-footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 2px solid var(--navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--gray);
+    }
+    .doc-footer strong { color: var(--navy); }
+
+    @media print {
+      body { padding: 20px; }
+      .callout { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <div class="logo-mark">FIRM<span>EDGE</span></div>
+    <div style="font-size:11px; color:var(--gray); margin-top:3px;">Law Firm Operations & AI Consulting</div>
+  </div>
+  <div class="doc-meta">
+    Technical Requirements Document<br>
+    Prepared for: <strong>[Firm Name]</strong><br>
+    <span id="doc-date"></span>
+  </div>
+</div>
+
+<h1>Technical Requirements</h1>
+<p class="doc-subtitle">What we need from your team to get your dashboard live — usually resolved in a single 90-minute session.</p>
+
+<div class="callout green">
+  <strong>Our commitment:</strong> We do the heavy lifting. Your team's total time investment is approximately 30 minutes of access coordination. Everything else is on us. Most firms are live within 3 days of first contact.
+</div>
+
+<h2>What We're Installing (And What We're Not)</h2>
+<p>The FirmEdge dashboard is a <strong>read-only reporting layer</strong> that connects to your existing practice management database. We do not install software on your workstations, modify your existing systems, or store your client data on external servers.</p>
+
+<table class="req-table">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Details</th>
+      <th>Our approach</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Your practice management data</td>
+      <td>PC Law, Clio, MyCase, or other</td>
+      <td>Read-only access only. We never write to your database.</td>
+    </tr>
+    <tr>
+      <td>Dashboard hosting</td>
+      <td>Hosted on your local server or secure cloud</td>
+      <td>Accessible from any browser on your network. No app installs.</td>
+    </tr>
+    <tr>
+      <td>Client data storage</td>
+      <td>None</td>
+      <td>Data never leaves your environment. Queries run against your DB, results display in your browser.</td>
+    </tr>
+    <tr>
+      <td>Workstation changes</td>
+      <td>None required</td>
+      <td>Staff open a URL in any browser. Nothing to install on individual machines.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>What We Need From You</h2>
+<p>The checklist below covers everything required before your Launch Session. Most items take 5 minutes to locate.</p>
+
+<ul class="checklist">
+  <li>
+    <strong>Practice management software name and version</strong>
+    <span>e.g., "PC Law version 10" or "Clio Manage" — usually on the login screen or About page</span>
+  </li>
+  <li>
+    <strong>Read-only database credentials (PC Law / local DB only)</strong>
+    <span>SQL Server username and password with SELECT permissions only. Your IT contact can create these in 5 minutes. We provide instructions.</span>
+  </li>
+  <li>
+    <strong>Server IP address or hostname (PC Law / local DB only)</strong>
+    <span>The internal network address of the server running your practice management software. Usually something like 192.168.1.x.</span>
+  </li>
+  <li>
+    <strong>Network access confirmation</strong>
+    <span>Confirmation that the machine running our dashboard can reach your database server. For most small firms this is automatic on the same network.</span>
+  </li>
+  <li>
+    <strong>IT contact name and availability (if applicable)</strong>
+    <span>If you have an IT person or company, we'll coordinate directly with them to minimize your involvement. One 15-minute call is usually all they need.</span>
+  </li>
+  <li>
+    <strong>Your firm logo (PNG or SVG)</strong>
+    <span>For branding your dashboard. Any version will work — we'll format it properly.</span>
+  </li>
+</ul>
+
+<h2>For Firms Using Cloud-Based Software (Clio, MyCase)</h2>
+<p>If your practice management software is cloud-hosted, the setup is even simpler — no server access required.</p>
+
+<ul class="checklist">
+  <li>
+    <strong>API access authorization</strong>
+    <span>A one-click authorization in your Clio or MyCase settings. Takes 2 minutes. We walk you through it on the call.</span>
+  </li>
+  <li>
+    <strong>Admin login for the authorization step</strong>
+    <span>You (or your office manager) will need to be logged into your practice management software during setup.</span>
+  </li>
+</ul>
+
+<h2>Launch Session Timeline</h2>
+<p>Here's exactly what happens during your 90-minute launch session:</p>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-day">0–15 min</div>
+    <div class="timeline-content">
+      <strong>Demo with your firm's data structure</strong>
+      <span>We show you the dashboard configured for your system. You see what it will look like with your real data.</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-day">15–35 min</div>
+    <div class="timeline-content">
+      <strong>Access setup</strong>
+      <span>We connect to your database live on screen. If IT is needed, this is their 15-minute window. Most small firms: the office manager has the credentials.</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-day">35–65 min</div>
+    <div class="timeline-content">
+      <strong>Live dashboard with real data</strong>
+      <span>Your actual AR data appears on screen. We walk through every section together and answer questions.</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-day gold">65–90 min</div>
+    <div class="timeline-content">
+      <strong>You're live</strong>
+      <span>Dashboard is running, staff are trained, you have a browser bookmark. We handle any cleanup after the call.</span>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Heads up for IT contacts:</strong> Our access requirements are intentionally minimal. We request read-only SQL credentials (SELECT only, no INSERT/UPDATE/DELETE permissions), access to one internal port (default 1433 for SQL Server), and no changes to your firewall or domain policy. A one-page network security summary is available on request.
+</div>
+
+<h2>Questions Before the Call?</h2>
+<p>Reach out directly — no ticketing system, no support queue. Just a real person who knows your setup.</p>
+
+<table class="req-table">
+  <thead><tr><th>Contact</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>Name</td><td>Cass Morgan</td></tr>
+    <tr><td>Email</td><td>[your@email.com]</td></tr>
+    <tr><td>Phone/Text</td><td>[your number]</td></tr>
+    <tr><td>Response time</td><td>Same day, usually faster</td></tr>
+  </tbody>
+</table>
+
+<div class="doc-footer">
+  <div><strong>FirmEdge</strong> — Law Firm Operations & AI Consulting &nbsp;·&nbsp; Clarkston, MI</div>
+  <div>Confidential — prepared for <strong>[Firm Name]</strong></div>
+</div>
+
+<script>
+  document.getElementById('doc-date').textContent = new Date().toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+</script>
+</body>
+</html>

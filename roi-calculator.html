@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROI Calculator | MatterIQ</title>
+    <style>
+        :root {
+            --navy: #1a2744;
+            --navy-light: #243258;
+            --gold: #c9a84c;
+            --white: #ffffff;
+            --off-white: #f7f8fa;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --text: #111827;
+            --green: #059669;
+            --red: #dc2626;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--off-white);
+            color: var(--text);
+        }
+        
+        nav {
+            background: var(--navy);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--gold);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--gold);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .calculator-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin: -30px 0 40px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            background: var(--off-white);
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 4px solid var(--navy);
+        }
+        
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-light);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(26, 39, 68, 0.1);
+        }
+        
+        .input-help {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+        
+        .results {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--navy);
+        }
+        
+        .result-card h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .result-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        
+        .result-breakdown {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+        
+        .summary-section {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .summary-section h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .summary-metric:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-metric-label {
+            font-size: 14px;
+        }
+        
+        .summary-metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gold);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #856404;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .footer-section {
+            background: var(--off-white);
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 1px solid var(--gray-light);
+            margin-top: 60px;
+        }
+        
+        .footer-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            font-size: 16px;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 39, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Matter<span>IQ</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="roi-calculator.html" class="active">ROI Calculator</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <div class="hero">
+        <h1>Calculate Your Firm's Potential Savings</h1>
+        <p>See exactly how much MatterIQ could save your firm in year one. Input your firm's details and we'll show you the numbers.</p>
+    </div>
+    
+    <div class="container">
+        <div class="calculator-container">
+            <div class="content">
+                <!-- LEFT COLUMN: INPUTS -->
+                <div>
+                    <div class="section">
+                        <h2>Firm Basics</h2>
+                        
+                        <div class="form-group">
+                            <label>Total Legal Assistants</label>
+                            <input type="number" id="legalAssistants" value="14" min="1" max="100">
+                            <div class="input-help">How many legal assistants does your firm have?</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Total Active G&C Cases</label>
+                            <input type="number" id="totalCases" value="450" min="10" max="5000">
+                            <div class="input-help">Guardian/Conservatorship cases under management</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Legal Assistant Billing Rate ($/hr)</label>
+                            <input type="number" id="assistantRate" value="80" min="30" max="200" step="5">
+                            <div class="input-help">What you bill out for legal assistant time</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>G&C Ward Monthly Rate ($)</label>
+                            <input type="number" id="wardRate" value="140" min="50" max="500" step="10">
+                            <div class="input-help">Flat monthly rate per court-appointed ward</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 30px;">
+                        <h2>Current Pain Points</h2>
+                        
+                        <div class="form-group">
+                            <label>Unbilled Time per Assistant per Day (minutes)</label>
+                            <input type="number" id="unbilledMinutes" value="30" min="0" max="240" step="5">
+                            <div class="input-help">Email triage, data entry, scheduling that doesn't get logged</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Current Cases per Assistant</label>
+                            <input type="number" id="casesPerAssistant" value="32" min="10" max="100">
+                            <div class="input-help">Average ward load per legal assistant today</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Est. Cases You Turn Away per Year</label>
+                            <input type="number" id="turnAwayCase" value="50" min="0" max="500" step="10">
+                            <div class="input-help">Cases you can't take due to capacity constraints</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 30px;">
+                        <h2>Implementation Options</h2>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="serverOwn" checked>
+                            <label for="serverOwn">Firm will own server (on-premises)</label>
+                        </div>
+                        <div class="input-help" style="margin-bottom: 20px;">If unchecked, MatterIQ manages cloud infrastructure</div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hasPC" checked>
+                            <label for="hasPC">Currently use PC Law for billing</label>
+                        </div>
+                        <div class="input-help">Required for automatic time entry sync</div>
+                    </div>
+                </div>
+                
+                <!-- RIGHT COLUMN: RESULTS -->
+                <div>
+                    <div class="results">
+                        <div class="result-card">
+                            <h3>Lever 1: Recovered Billable Hours</h3>
+                            <div class="result-amount" id="lever1">$0</div>
+                            <div class="result-breakdown" id="lever1Breakdown"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h3>Lever 2: Expanded Case Capacity</h3>
+                            <div class="result-amount" id="lever2">$0</div>
+                            <div class="result-breakdown" id="lever2Breakdown"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h3>Lever 3: Avoided Annual Accounting Labor</h3>
+                            <div class="result-amount" id="lever3">$0</div>
+                            <div class="result-breakdown" id="lever3Breakdown"></div>
+                        </div>
+                        
+                        <div class="summary-section">
+                            <h3>Year 1 Financial Summary</h3>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Total Value Recovered</span>
+                                <span class="summary-metric-value" id="totalValue">$0</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Implementation Cost (one-time)</span>
+                                <span class="summary-metric-value" id="implCost">$0</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Annual Software Cost</span>
+                                <span class="summary-metric-value" id="softwareCost">$0</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Total Year 1 Investment</span>
+                                <span class="summary-metric-value" id="totalCost">$0</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Net Year 1 ROI</span>
+                                <span class="summary-metric-value" id="netROI">$0</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">ROI %</span>
+                                <span class="summary-metric-value" id="roiPercent">0%</span>
+                            </div>
+                            
+                            <div class="summary-metric">
+                                <span class="summary-metric-label">Payback Period</span>
+                                <span class="summary-metric-value" id="paybackPeriod">0 months</span>
+                            </div>
+                        </div>
+                        
+                        <div class="note" id="note"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <h2>Ready to Transform Your Firm?</h2>
+            <p>See your specific ROI above? That's what MatterIQ can do for your practice. Let's talk about which deployment option makes sense for your firm.</p>
+            <button class="cta-button" onclick="contactSales()">Schedule a Demo</button>
+        </div>
+    </div>
+    
+    <script>
+        const inputs = {
+            legalAssistants: document.getElementById('legalAssistants'),
+            totalCases: document.getElementById('totalCases'),
+            assistantRate: document.getElementById('assistantRate'),
+            wardRate: document.getElementById('wardRate'),
+            unbilledMinutes: document.getElementById('unbilledMinutes'),
+            casesPerAssistant: document.getElementById('casesPerAssistant'),
+            turnAwayCase: document.getElementById('turnAwayCase'),
+            serverOwn: document.getElementById('serverOwn'),
+            hasPC: document.getElementById('hasPC')
+        };
+        
+        const results = {
+            lever1: document.getElementById('lever1'),
+            lever1Breakdown: document.getElementById('lever1Breakdown'),
+            lever2: document.getElementById('lever2'),
+            lever2Breakdown: document.getElementById('lever2Breakdown'),
+            lever3: document.getElementById('lever3'),
+            lever3Breakdown: document.getElementById('lever3Breakdown'),
+            totalValue: document.getElementById('totalValue'),
+            implCost: document.getElementById('implCost'),
+            softwareCost: document.getElementById('softwareCost'),
+            totalCost: document.getElementById('totalCost'),
+            netROI: document.getElementById('netROI'),
+            roiPercent: document.getElementById('roiPercent'),
+            paybackPeriod: document.getElementById('paybackPeriod'),
+            note: document.getElementById('note')
+        };
+        
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+        
+        function calculate() {
+            const assistants = parseInt(inputs.legalAssistants.value) || 0;
+            const totalCases = parseInt(inputs.totalCases.value) || 0;
+            const assistantRate = parseInt(inputs.assistantRate.value) || 0;
+            const wardRate = parseInt(inputs.wardRate.value) || 0;
+            const unbilledMinutes = parseInt(inputs.unbilledMinutes.value) || 0;
+            const casesPerAssistant = parseInt(inputs.casesPerAssistant.value) || 0;
+            const serverOwn = inputs.serverOwn.checked;
+            const hasPC = inputs.hasPC.checked;
+            
+            const workingDaysPerYear = 250;
+            const unbilledHours = (unbilledMinutes / 60) * assistants * workingDaysPerYear;
+            const lever1Value = unbilledHours * assistantRate;
+            
+            results.lever1.textContent = formatCurrency(lever1Value);
+            results.lever1Breakdown.textContent = 
+                `${unbilledMinutes} min/day × ${assistants} assistants × ${workingDaysPerYear} days × $${assistantRate}/hr`;
+            
+            const idealCasesPerAssistant = 55;
+            const additionalCases = (idealCasesPerAssistant - casesPerAssistant) * assistants;
+            const lever2Value = additionalCases * wardRate * 12;
+            
+            results.lever2.textContent = formatCurrency(lever2Value);
+            results.lever2Breakdown.textContent = 
+                `(${idealCasesPerAssistant} - ${casesPerAssistant}) cases × ${assistants} assistants × $${wardRate}/mo × 12 months`;
+            
+            const hoursPerAccounting = 3;
+            const lever3Value = totalCases * hoursPerAccounting * assistantRate;
+            
+            results.lever3.textContent = formatCurrency(lever3Value);
+            results.lever3Breakdown.textContent = 
+                `${totalCases} cases × ${hoursPerAccounting} hrs/accounting × $${assistantRate}/hr`;
+            
+            const totalValue = lever1Value + lever2Value + lever3Value;
+            results.totalValue.textContent = formatCurrency(totalValue);
+            
+            let implCost = 0;
+            let softwareCost = 0;
+            
+            if (serverOwn) {
+                implCost = 15000;
+                softwareCost = 7500 * 12;
+            } else {
+                implCost = 5000;
+                softwareCost = 9500 * 12;
+            }
+            
+            results.implCost.textContent = formatCurrency(implCost);
+            results.softwareCost.textContent = formatCurrency(softwareCost);
+            
+            const totalCost = implCost + softwareCost;
+            results.totalCost.textContent = formatCurrency(totalCost);
+            
+            const netROI = totalValue - totalCost;
+            const roiPercent = totalCost > 0 ? ((netROI / totalCost) * 100).toFixed(0) : 0;
+            const paybackMonths = softwareCost > 0 ? ((implCost / (totalValue / 12))).toFixed(1) : 0;
+            
+            results.netROI.textContent = formatCurrency(netROI);
+            results.roiPercent.textContent = roiPercent + '%';
+            results.paybackPeriod.textContent = paybackMonths + ' months';
+            
+            let note = '';
+            let showNote = false;
+            
+            if (!hasPC) {
+                note = '⚠️ <strong>Note:</strong> PC Law integration required for Lever 1 (billable time sync).';
+                showNote = true;
+            } else if (netROI < 50000) {
+                note = '⚠️ <strong>Smaller firm profile:</strong> Consider starting with the Starter tier ($3,500/mo, Morning Brief only).';
+                showNote = true;
+            } else if (netROI > 500000) {
+                note = '✅ <strong>Strong ROI signal:</strong> Your firm is ideal for the full Scale tier deployment.';
+                showNote = true;
+            }
+            
+            results.note.innerHTML = note;
+            results.note.style.display = showNote ? 'block' : 'none';
+        }
+        
+        function contactSales() {
+            const netROI = document.getElementById('netROI').textContent;
+            const roiPercent = document.getElementById('roiPercent').textContent;
+            
+            const subject = `MatterIQ Demo Request - Potential ROI: ${netROI}`;
+            const body = `I'm interested in a demo. Based on the ROI calculator, my firm could see ${netROI} in Year 1 (${roiPercent} ROI).`;
+            
+            window.location.href = `mailto:sales@matteriq.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+        
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('change', calculate);
+            input.addEventListener('input', calculate);
+        });
+        
+        calculate();
+    </script>
+</body>
+</html>

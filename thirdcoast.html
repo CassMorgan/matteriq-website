@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThirdCoast — The Plan</title>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --gold: #c9a84c;
+      --coffee: #6b4226;
+      --coffee-light: #c8956c;
+      --white: #ffffff;
+      --off-white: #f7f5f2;
+      --gray: #6b7280;
+      --gray-light: #e5e7eb;
+      --text: #111827;
+      --green: #059669;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: var(--coffee);
+      color: white;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    header .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--coffee-light);
+      margin-bottom: 12px;
+    }
+    header h1 {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    header h1 span { color: var(--gold); }
+    header p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.75);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Tabs */
+    .tabs {
+      background: var(--navy);
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tab {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab:hover { background: rgba(255,255,255,0.15); color: white; }
+    .tab.active { background: var(--gold); color: var(--navy); }
+
+    /* Panels */
+    .panel { display: none; padding: 48px 24px; max-width: 860px; margin: 0 auto; }
+    .panel.active { display: block; }
+
+    /* ── PANEL 1: VISUAL TIMELINE ── */
+    .timeline-hero {
+      background: var(--coffee);
+      border-radius: 16px;
+      padding: 36px;
+      color: white;
+      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 24px;
+      text-align: center;
+    }
+    .tl-stat .num { font-size: 36px; font-weight: 800; color: var(--gold); }
+    .tl-stat .label { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+    .phase-timeline { position: relative; padding-left: 48px; }
+    .phase-timeline::before {
+      content: '';
+      position: absolute;
+      left: 18px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--gray-light);
+    }
+    .tl-phase {
+      position: relative;
+      margin-bottom: 36px;
+      background: white;
+      border-radius: 12px;
+      padding: 24px 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .tl-phase::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 28px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--coffee);
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px var(--coffee-light);
+    }
+    .tl-phase .phase-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--coffee-light);
+      margin-bottom: 4px;
+    }
+    .tl-phase h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .tl-phase p { font-size: 14px; color: var(--gray); margin-bottom: 12px; }
+    .tl-phase .cost-badge {
+      display: inline-block;
+      background: var(--off-white);
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .tl-phase.open-phase { border-left: 4px solid var(--gold); }
+    .tl-phase.open-phase::before { background: var(--gold); box-shadow: 0 0 0 3px #f5e6b8; }
+
+    /* ── PANEL 2: BULLET POINTS ── */
+    .bullet-section { margin-bottom: 36px; }
+    .bullet-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--coffee);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--coffee-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bullet-section ul { list-style: none; }
+    .bullet-section ul li {
+      padding: 10px 0 10px 28px;
+      border-bottom: 1px solid var(--gray-light);
+      font-size: 15px;
+      position: relative;
+    }
+    .bullet-section ul li:last-child { border-bottom: none; }
+    .bullet-section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .bullet-section ul li strong { color: var(--navy); }
+
+    /* ── PANEL 3: FINANCIAL SNAPSHOT ── */
+    .fin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .fin-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--coffee);
+    }
+    .fin-card .fin-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 8px; }
+    .fin-card .fin-num { font-size: 32px; font-weight: 800; color: var(--navy); letter-spacing: -1px; line-height: 1; }
+    .fin-card .fin-sub { font-size: 12px; color: var(--gray); margin-top: 6px; }
+    .fin-card.highlight { border-top-color: var(--gold); }
+    .fin-card.highlight .fin-num { color: var(--coffee); }
+
+    .fin-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; font-size: 14px; }
+    .fin-table th { background: var(--coffee); color: white; padding: 10px 16px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .fin-table td { padding: 10px 16px; border-bottom: 1px solid var(--gray-light); }
+    .fin-table tr:last-child td { border-bottom: none; font-weight: 700; background: var(--off-white); }
+    .fin-table td:last-child { text-align: right; font-weight: 600; }
+
+    /* ── PANEL 4: LETTER TO JANE ── */
+    .letter {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #2d2d2d;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .letter p { margin-bottom: 20px; }
+    .letter .salutation { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--coffee); }
+    .letter .signature { margin-top: 40px; font-style: italic; color: var(--gray); }
+    .letter strong { color: var(--coffee); }
+    .letter .highlight-box {
+      background: var(--off-white);
+      border-left: 4px solid var(--gold);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 24px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+    }
+    .letter .highlight-box strong { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 8px; font-style: normal; }
+
+    /* Footer */
+    footer {
+      background: var(--coffee);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      margin-top: 60px;
+    }
+    footer strong { color: white; }
+
+    @media (max-width: 600px) {
+      .panel { padding: 32px 16px; }
+      .letter { padding: 28px 20px; }
+      .timeline-hero { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">A Dream Worth Building</div>
+  <h1>Third<span>Coast</span></h1>
+  <p>Coffee shop. Attorney suites. Your building. Clarkston, MI.</p>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showPanel('timeline')">📍 Visual Timeline</button>
+  <button class="tab" onclick="showPanel('bullets')">✅ Simple Bullets</button>
+  <button class="tab" onclick="showPanel('financial')">💰 Financial Snapshot</button>
+  <button class="tab" onclick="showPanel('letter')">✉️ Letter to Jane</button>
+</div>
+
+<!-- ── PANEL 1: VISUAL TIMELINE ── -->
+<div class="panel active" id="panel-timeline">
+
+  <div class="timeline-hero">
+    <div class="tl-stat"><div class="num">2-3</div><div class="label">Years to open</div></div>
+    <div class="tl-stat"><div class="num">$80k</div><div class="label">Down payment (est.)</div></div>
+    <div class="tl-stat"><div class="num">3</div><div class="label">Income streams</div></div>
+    <div class="tl-stat"><div class="num">$0</div><div class="label">Current rent (saved)</div></div>
+  </div>
+
+  <div class="phase-timeline">
+
+    <div class="tl-phase">
+      <div class="phase-label">Now — Month 2 · Free</div>
+      <h3>Validate the Dream</h3>
+      <p>One phone call to Independence Township zoning confirms if Citation Drive allows mixed-use commercial with food service. A commercial real estate agent checks if the property is still available and what it costs. Zero dollars, maximum information.</p>
+      <span class="cost-badge">Cost: $0</span>
+    </div>
+
+    <div class="tl-phase">
+      <div class="phase-label">Month 2–4 · Free Conversations</div>
+      <h3>Talk to Money</h3>
+      <p>Meet with an SBA lender. The SBA 504 loan is built for exactly this — you put in 10%, the government backs 40%, a bank covers 50%. Your law firm as anchor tenant makes the application much stronger. No commitment required to have the conversation.</p>
+      <span class="cost-badge">Down payment needed: ~$80,000</span>
+    </div>
+
+    <div class="tl-phase">
+      <div class="phase-label">Month 4–10 · Design Phase</div>
+      <h3>Build the Plan</h3>
+      <p>Hire an architect for a feasibility study — this confirms what you can build, what it costs, and what the layout looks like. Coffee shop below, attorney suites above, your firm anchoring it. Permits pulled from the township. Health department approval for food service.</p>
+      <span class="cost-badge">Cost: $35k–$90k</span>
+    </div>
+
+    <div class="tl-phase">
+      <div class="phase-label">Month 10–24 · Construction</div>
+      <h3>Build It</h3>
+      <p>Ground-up commercial construction. Coffee shop buildout with local-sourced equipment. 4-6 attorney suites above. Your firm moves in before the doors open to the public. Pre-lease suites to attorneys you know — your network fills this before you break ground.</p>
+      <span class="cost-badge">Total build: $400k–$800k (financed)</span>
+    </div>
+
+    <div class="tl-phase open-phase">
+      <div class="phase-label">Month 24–30 · 🎉 Open Day</div>
+      <h3>ThirdCoast Opens</h3>
+      <p>Local Michigan beans. Self-serve, casual, community. Attorneys upstairs. You running both. The building you own, the coffee shop you always wanted, the firm you built — all under one roof in downtown Clarkston.</p>
+      <span class="cost-badge" style="background:#fffbeb; border-color:var(--gold); color:var(--coffee);">Monthly income: $7,200–$20,000</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PANEL 2: BULLET POINTS ── -->
+<div class="panel" id="panel-bullets">
+
+  <div class="bullet-section">
+    <h2>☕ What You're Building</h2>
+    <ul>
+      <li><strong>A building you own</strong> in Clarkston — not renting, owning</li>
+      <li><strong>Ground floor: ThirdCoast Coffee</strong> — local Michigan beans, casual, self-serve, yours</li>
+      <li><strong>Upper floor: 4-6 attorney suites</strong> — leased to other attorneys, your firm anchors it</li>
+      <li><strong>Three income streams</strong> — coffee profits + suite rents + your firm's rent eliminated</li>
+      <li><strong>Timeline: 2-3 years</strong> from decision to open doors</li>
+    </ul>
+  </div>
+
+  <div class="bullet-section">
+    <h2>📋 What Has to Happen</h2>
+    <ul>
+      <li><strong>Zoning check</strong> — one phone call to Independence Township, free, takes 10 minutes</li>
+      <li><strong>Property check</strong> — is Citation Drive still available? Commercial RE agent pulls this</li>
+      <li><strong>SBA 504 loan</strong> — designed for owner-occupied commercial, ~10% down, your firm is the anchor</li>
+      <li><strong>Architect feasibility study</strong> — confirms what you can build and what it costs ($5-15k)</li>
+      <li><strong>Full design + permits</strong> — 3-6 months, $30-75k</li>
+      <li><strong>Construction</strong> — 12-18 months, $400k-800k total (mostly financed)</li>
+      <li><strong>Pre-lease suites</strong> — your network fills these before you open</li>
+      <li><strong>Open ThirdCoast</strong> — you run the coffee shop for 6 months, then hire a manager</li>
+    </ul>
+  </div>
+
+  <div class="bullet-section">
+    <h2>💡 Why This Works</h2>
+    <ul>
+      <li><strong>Your firm anchors the loan</strong> — lenders love owner-occupied commercial</li>
+      <li><strong>Self-serve coffee = low labor</strong> — 1-2 part-time people, not 6 full-timers</li>
+      <li><strong>You know every probate attorney in Oakland County</strong> — suites pre-fill from your network</li>
+      <li><strong>Clarkston is growing</strong> — no competition for this concept in the market</li>
+      <li><strong>Michigan local beans = real story</strong> — "Third Coast Coffee" means something here</li>
+      <li><strong>Eliminates your current rent</strong> — saves $18k-36k/year immediately</li>
+    </ul>
+  </div>
+
+  <div class="bullet-section">
+    <h2>⚠️ Honest Risks</h2>
+    <ul>
+      <li><strong>Two businesses is real work</strong> — hiring a coffee shop manager in month 6 is non-negotiable</li>
+      <li><strong>Construction always runs over</strong> — budget a 15-20% contingency, no exceptions</li>
+      <li><strong>Coffee shops can fail</strong> — self-serve model reduces this risk significantly</li>
+      <li><strong>2-3 years is a long time</strong> — the dream has to stay alive through the process</li>
+    </ul>
+  </div>
+
+  <div class="bullet-section">
+    <h2>🏁 First Move</h2>
+    <ul>
+      <li><strong>Call Independence Township zoning</strong> — one call, free, unlocks everything</li>
+      <li>Ask: "Is Citation Drive zoned for mixed-use commercial including food service?"</li>
+      <li>If yes: everything else can move forward</li>
+      <li>If no: find an alternative parcel nearby (there will be one)</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ── PANEL 3: FINANCIAL SNAPSHOT ── -->
+<div class="panel" id="panel-financial">
+
+  <div class="fin-grid">
+    <div class="fin-card">
+      <div class="fin-label">Down Payment</div>
+      <div class="fin-num">$80k</div>
+      <div class="fin-sub">~10% via SBA 504</div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-label">Total Project Cost</div>
+      <div class="fin-num">$800k</div>
+      <div class="fin-sub">Land + build + equipment</div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-label">Monthly Mortgage</div>
+      <div class="fin-num">$5,300</div>
+      <div class="fin-sub">30yr commercial at ~7%</div>
+    </div>
+    <div class="fin-card highlight">
+      <div class="fin-label">Monthly Income Potential</div>
+      <div class="fin-num">$7.2k–$20k</div>
+      <div class="fin-sub">Coffee + suites + rent saved</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:700; color:var(--navy); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px;">Where the Money Comes From</h3>
+  <table class="fin-table">
+    <thead><tr><th>Source</th><th>Monthly (low)</th><th>Monthly (high)</th><th>Annual (mid)</th></tr></thead>
+    <tbody>
+      <tr><td>☕ Coffee shop profit</td><td>$2,500</td><td>$8,000</td><td>$63,000</td></tr>
+      <tr><td>🏢 Attorney suite rents (4-6)</td><td>$3,200</td><td>$9,000</td><td>$73,200</td></tr>
+      <tr><td>💼 Your firm rent eliminated</td><td>$1,500</td><td>$3,000</td><td>$27,000</td></tr>
+      <tr><td><strong>Total benefit</strong></td><td><strong>$7,200</strong></td><td><strong>$20,000</strong></td><td><strong>$163,200</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:16px; font-weight:700; color:var(--navy); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px;">What You Spend to Get There</h3>
+  <table class="fin-table">
+    <thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead>
+    <tbody>
+      <tr><td>Down payment (SBA 504)</td><td>$60,000</td><td>$100,000</td></tr>
+      <tr><td>Architect + feasibility</td><td>$35,000</td><td>$75,000</td></tr>
+      <tr><td>Permitting</td><td>$5,000</td><td>$15,000</td></tr>
+      <tr><td>Coffee shop buildout</td><td>$57,000</td><td>$126,000</td></tr>
+      <tr><td>Attorney suite buildout</td><td>$40,000</td><td>$80,000</td></tr>
+      <tr><td>Finishes + furniture</td><td>$20,000</td><td>$40,000</td></tr>
+      <tr><td>Contingency (always needed)</td><td>$30,000</td><td>$60,000</td></tr>
+      <tr><td><strong>Total out of pocket</strong></td><td><strong>$247,000</strong></td><td><strong>$496,000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:20px 24px; margin-top:8px;">
+    <div style="font-size:13px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Bottom Line</div>
+    <div style="font-size:15px; color:#1a2744; line-height:1.6;">At the midpoint — $370k out of pocket, $5,300/month mortgage, ~$11,600/month in income and savings — <strong>you're cash-flow positive by roughly $6,300/month</strong> once fully leased. That's $75,600/year net from a building you own that's also going up in value.</div>
+  </div>
+
+</div>
+
+<!-- ── PANEL 4: LETTER TO JANE ── -->
+<div class="panel" id="panel-letter">
+  <div class="letter">
+    <div class="salutation">Jane,</div>
+
+    <p>You've mentioned this more than once — the building, the coffee shop, the space for attorneys to work. I don't think it's just a dream. I think it's a plan waiting for the first step.</p>
+
+    <p>Here's what it looks like when you actually map it out:</p>
+
+    <p>You own a building in Clarkston. Ground floor is <strong>ThirdCoast Coffee</strong> — local Michigan beans, casual, self-serve, the kind of place the neighborhood actually needs. Not a Starbucks. Something real. Something yours.</p>
+
+    <p>Upstairs, four to six attorney suites. Your firm anchors it — which means you stop paying rent to someone else and start building equity in something you own. The other attorneys in your network fill the remaining suites. You already know all of them.</p>
+
+    <p>Three income streams from one address. Coffee shop profit. Suite rents. And the rent you're currently paying someone else — kept.</p>
+
+    <div class="highlight-box">
+      <strong>The rough numbers</strong>
+      Down payment: ~$80,000 via SBA 504 loan (10% down, government-backed). Monthly income once open: $7,200–$20,000. Monthly mortgage: ~$5,300. You're cash-flow positive once the suites are leased — which happens before you open, because you know everyone.
+    </div>
+
+    <p>It's not a 90-day project. It's 2-3 years from decision to open doors. Zoning check, financing, architect, permits, construction. But every step is knowable, and the first one is free — one phone call to Independence Township to confirm the zoning on Citation Drive.</p>
+
+    <p>The coffee shop piece — I know you. You'd run it yourself for the first six months, figure out every detail, make it exactly what you want it to be. Then you hire someone good and step back. That's how it works. The self-serve model keeps labor low and quality consistent. Michigan-roasted beans. A place where people actually want to be.</p>
+
+    <p>You'd be the attorney who owns the building, runs the coffee shop, and rents to the competition. In Clarkston. On a property you picked.</p>
+
+    <p>That's not a small thing.</p>
+
+    <p>One phone call starts it. Everything else follows.</p>
+
+    <div class="signature">
+      — Cass
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Project ThirdCoast</strong> &nbsp;·&nbsp; Clarkston, MI &nbsp;·&nbsp; A Morgan Family Project
+</footer>
+
+<script>
+  function showPanel(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
